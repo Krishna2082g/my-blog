@@ -1,0 +1,31 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ post.title }}</h2>
+    <p>By {{ post.author }} | {{ post.created_at }}</p>
+    <p>{{ post.content }}</p>
+    
+    <hr>
+    <h3>Comments</h3>
+    <ul class="list-group">
+        {% for comment in comments %}
+            <li class="list-group-item">
+                <strong>{{ comment.user.username }}</strong>: {{ comment.content }}
+            </li>
+        {% empty %}
+            <li class="list-group-item">No comments yet.</li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+        <h3 class="mt-4">Add a Comment</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Post Comment</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to comment.</p>
+    {% endif %}
+</div>
+{% endblock %}
